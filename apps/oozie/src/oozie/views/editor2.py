@@ -46,7 +46,7 @@ from oozie.models2 import Node, Workflow, Coordinator, Bundle, NODES, WORKFLOW_N
   _import_workspace, _save_workflow
 from oozie.utils import convert_to_server_timezone
 from oozie.views.editor import edit_workflow as old_edit_workflow, edit_coordinator as old_edit_coordinator, edit_bundle as old_edit_bundle
-from notebook.connectors.dataeng import DataEngApi
+from notebook.connectors.dataeng import AltusDataEngApi
 
 
 LOG = logging.getLogger(__name__)
@@ -404,7 +404,7 @@ def _submit_workflow_helper(request, workflow, submit_action):
       if cluster.get('type') == 'altus-de':
         notebook = {}
         snippet = {'statement': 'SELECT 1'}
-        handle = DataEngApi(user=request.user, request=request, cluster_name=cluster.get('name')).execute(notebook, snippet)
+        handle = AltusDataEngApi(user=request.user, request=request, cluster_name=cluster.get('name')).execute(notebook, snippet)
         return JsonResponse({'status': 0, 'job_id': handle.get('id'), 'type': 'workflow'}, safe=False)
 
       try:

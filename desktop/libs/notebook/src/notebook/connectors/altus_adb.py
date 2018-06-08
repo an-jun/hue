@@ -23,7 +23,7 @@ from django.utils.translation import ugettext as _
 
 from metadata.workload_analytics_client import WorkfloadAnalyticsClient
 
-from notebook.connectors.altus import DataEngApi
+from notebook.connectors.altus import AnalyticDbApi
 from notebook.connectors.base import Api, QueryError
 
 
@@ -33,7 +33,7 @@ LOG = logging.getLogger(__name__)
 RUNNING_STATES = ('QUEUED', 'RUNNING', 'SUBMITTING')
 
 
-class AltusDataEngApi(Api):
+class AltusAdbApi(Api):
 
   def __init__(self, user, cluster_name, interpreter=None, request=None):
     Api.__init__(self, user, interpreter=interpreter, request=request)
@@ -43,7 +43,7 @@ class AltusDataEngApi(Api):
   def execute(self, notebook, snippet):
     statement = snippet['statement']
 
-    handle = DataEngApi(self.user).submit_hive_job(self.cluster_name, statement, params=None, job_xml=None)
+    handle = AnalyticDbApi(self.user).submit_hive_job(self.cluster_name, statement, params=None, job_xml=None)
     job = handle['jobs'][0]
 
     if job['status'] not in RUNNING_STATES:
@@ -61,7 +61,7 @@ class AltusDataEngApi(Api):
 
     job_id = snippet['result']['handle']['id']
 
-    handle = DataEngApi(self.user).list_jobs(job_ids=[job_id])
+    handle = AnalyticDbApi(self.user).list_jobs(job_ids=[job_id])
     job = handle['jobs'][0]
 
     if job['status'] in RUNNING_STATES:
@@ -86,7 +86,7 @@ class AltusDataEngApi(Api):
   def cancel(self, notebook, snippet):
     if snippet['result']['handle'].get('id'):
       job_id = snippet['result']['handle']['id']
-      DataEngApi(self.user).terminate_job(job_id=job_id)
+      AnalyticDbApi(self.user).terminate_job(job_id=job_id)
       response = {'status': 0}
     else:
       response = {'status': -1, 'message': _('Could not cancel because of unsuccessful submition.')}

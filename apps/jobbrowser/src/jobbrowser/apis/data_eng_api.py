@@ -21,7 +21,7 @@ from datetime import datetime,  timedelta
 
 from django.utils.translation import ugettext as _
 
-from notebook.connectors.altus import DataEngApi, DATE_FORMAT
+from notebook.connectors.altus import AltusDataEngApi, DATE_FORMAT
 
 from jobbrowser.apis.base_api import Api
 
@@ -32,7 +32,7 @@ LOG = logging.getLogger(__name__)
 class DataEngClusterApi(Api):
 
   def apps(self, filters):
-    api = DataEngApi(self.user)
+    api = AltusDataEngApi(self.user)
 
     jobs = api.list_clusters()
 
@@ -92,7 +92,7 @@ class DataEngJobApi(Api):
       kwargs['creation_date_after'] = (datetime.today() - delta).strftime(DATE_FORMAT)
     # Todo: filter on 'cluster_crn'
 
-    api = DataEngApi(self.user)
+    api = AltusDataEngApi(self.user)
 
     jobs = api.list_jobs(**kwargs)
 
@@ -112,7 +112,7 @@ class DataEngJobApi(Api):
     }
 
   def app(self, appid):
-    handle = DataEngApi(self.user).describe_job(job_id=appid)
+    handle = AltusDataEngApi(self.user).describe_job(job_id=appid)
 
     job = handle['job']
 

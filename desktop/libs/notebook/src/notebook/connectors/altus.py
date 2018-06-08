@@ -72,7 +72,7 @@ class SdxApi():
     return _exec('sdx', args)['namespaces']
 
 
-class DataEngApi():
+class AltusDataEngApi():
 
   def __init__(self, user): pass
 
@@ -185,3 +185,6 @@ class AnalyticDbApi():
 
     args = ['list-clusters']
     return _exec('analyticdb', args)
+
+  def submit_hue_query(self, cluster_crn, payload):
+    return _exec('analyticdb', ['submit-hue-query', '--cluster-crn', cluster_crn, '--payload', payload])

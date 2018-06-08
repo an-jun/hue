@@ -36,7 +36,7 @@ from django.views.decorators.http import require_POST
 from metadata.conf import has_navigator
 from metadata.navigator_api import search_entities as metadata_search_entities, _highlight
 from metadata.navigator_api import search_entities_interactive as metadata_search_entities_interactive
-from notebook.connectors.altus import SdxApi, AnalyticDbApi, DataEngApi
+from notebook.connectors.altus import SdxApi, AnalyticDbApi, AltusDataEngApi
 from notebook.connectors.base import Notebook
 from notebook.views import upgrade_session_properties
 
@@ -84,7 +84,7 @@ def get_context_namespaces(request, interface):
 
   clusters = get_clusters(request.user).values()
 
-  if interface == 'hive':
+  if interface == 'hive' or interface == 'impala':
     namespaces.extend([{
         'id': cluster['id'],
         'name': cluster['name']
@@ -101,6 +101,8 @@ def get_context_namespaces(request, interface):
       )
       response['hasMulticluser'] = True
 
+      # TODO, if impala, tag namespaces with computes
+
   response[interface] = namespaces
   response['status'] = 0
 
@@ -114,7 +116,7 @@ def get_context_computes(request, interface):
 
   clusters = get_clusters(request.user).values()
 
-  if interface == 'hive' or interface == 'oozie' or interface == 'jobs':
+  if interface == 'hive' or interface == 'impala' or interface == 'oozie' or interface == 'jobs':
     computes.extend([{
         'id': cluster['id'],
         'name': cluster['name'],
@@ -124,7 +126,7 @@ def get_context_computes(request, interface):
       } for cluster in clusters
     ])
 
-  if interface == 'hive' or interface == 'jobs':
+  if interface == 'impala' or interface == 'jobs':
     if [cluster for cluster in clusters if cluster['type'] == 'altus']:
       computes.extend([{
           'id': cluster.get('crn', 'None'),
@@ -147,7 +149,7 @@ def get_context_computes(request, interface):
           'environmentType': cluster.get('environmentType'),
           'serviceType': cluster.get('serviceType'),
           'type': 'altus-de'
-        } for cluster in DataEngApi(request.user).list_clusters()['clusters']]
+        } for cluster in AltusDataEngApi(request.user).list_clusters()['clusters']]
       )
 
   response[interface] = computes
