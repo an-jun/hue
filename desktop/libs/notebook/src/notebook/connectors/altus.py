@@ -72,7 +72,7 @@ class SdxApi():
     return _exec('sdx', args)['namespaces']
 
 
-class AltusDataEngApi():
+class DataEngApi():
 
   def __init__(self, user): pass
 

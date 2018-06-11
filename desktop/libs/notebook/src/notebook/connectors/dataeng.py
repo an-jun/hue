@@ -33,7 +33,7 @@ LOG = logging.getLogger(__name__)
 RUNNING_STATES = ('QUEUED', 'RUNNING', 'SUBMITTING')
 
 
-class AltusDataEngApi(Api):
+class DataEngApi(Api):
 
   def __init__(self, user, cluster_name, interpreter=None, request=None):
     Api.__init__(self, user, interpreter=interpreter, request=request)

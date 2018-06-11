@@ -297,8 +297,8 @@ def get_api(request, snippet):
     from notebook.connectors.rdbms import RdbmsApi
     return RdbmsApi(request.user, interpreter=snippet['type'])
   elif interface == 'dataeng':
-    from notebook.connectors.dataeng import AltusDataEngApi
-    return AltusDataEngApi(user=request.user, request=request, cluster_name=cluster.get('name'))
+    from notebook.connectors.dataeng import DataEngApi
+    return DataEngApi(user=request.user, request=request, cluster_name=cluster.get('name'))
   elif interface == 'jdbc' or interface == 'teradata':
     from notebook.connectors.jdbc import JdbcApi
     return JdbcApi(request.user, interpreter=interpreter)

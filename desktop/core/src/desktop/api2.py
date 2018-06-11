@@ -36,7 +36,7 @@ from django.views.decorators.http import require_POST
 from metadata.conf import has_navigator
 from metadata.navigator_api import search_entities as metadata_search_entities, _highlight
 from metadata.navigator_api import search_entities_interactive as metadata_search_entities_interactive
-from notebook.connectors.altus import SdxApi, AnalyticDbApi, AltusDataEngApi
+from notebook.connectors.altus import SdxApi, AnalyticDbApi, DataEngApi
 from notebook.connectors.base import Notebook
 from notebook.views import upgrade_session_properties
 
@@ -149,7 +149,7 @@ def get_context_computes(request, interface):
           'environmentType': cluster.get('environmentType'),
           'serviceType': cluster.get('serviceType'),
           'type': 'altus-de'
-        } for cluster in AltusDataEngApi(request.user).list_clusters()['clusters']]
+        } for cluster in DataEngApi(request.user).list_clusters()['clusters']]
       )
 
   response[interface] = computes
