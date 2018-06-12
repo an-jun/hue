@@ -277,6 +277,8 @@ def get_api(request, snippet):
 
   # Multi cluster
   cluster = json.loads(request.POST.get('cluster', '""'))
+  if cluster and 'altus' in cluster:
+    interface = 'altus-adb'
   print cluster
 
   if interface == 'hiveserver2':
@@ -296,6 +298,9 @@ def get_api(request, snippet):
   elif interface == 'rdbms':
     from notebook.connectors.rdbms import RdbmsApi
     return RdbmsApi(request.user, interpreter=snippet['type'])
+  elif interface == 'altus-adb':
+    from notebook.connectors.altus_adb import AltusAdbApi
+    return AltusAdbApi(user=request.user, cluster_name=cluster, request=request)
   elif interface == 'dataeng':
     from notebook.connectors.dataeng import DataEngApi
     return DataEngApi(user=request.user, request=request, cluster_name=cluster.get('name'))

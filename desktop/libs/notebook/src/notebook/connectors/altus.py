@@ -69,6 +69,12 @@ class SdxApi():
     """
 
     args = ['list-namespaces']
+    
+    if True:
+      args.append('--endpoint-url')
+      args.append('https://ganeshk-2-api.arcus-dev.cloudera.com')
+      args.append('--profile=dev')
+
     return _exec('sdx', args)['namespaces']
 
 
@@ -184,6 +190,12 @@ class AnalyticDbApi():
     """
 
     args = ['list-clusters']
+    
+    if True:
+      args.append('--endpoint-url')
+      args.append('https://ganeshk-2-api.arcus-dev.cloudera.com')
+      args.append('--profile=dev')
+
     return _exec('analyticdb', args)
 
   def submit_hue_query(self, cluster_crn, payload):

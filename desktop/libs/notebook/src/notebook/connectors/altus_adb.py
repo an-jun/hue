@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import logging
+import json
 import re
 
 from django.urls import reverse
@@ -119,9 +120,37 @@ class AltusAdbApi(Api):
     ]
 
 
-  def close_statement(self, snippet):
-    pass
+  def autocomplete(self, snippet, database=None, table=None, column=None, nested=None):
+    url_path = '/notebook/api/autocomplete'
+    url_parameters = []
+
+    if database is not None:
+      url_path = '%s/%s' % (url_path, database)
+      url_parameters = []
+
+    return HueQuery(self.user, cluster_crn=self.cluster_name).do_post(url_path=url_path)['payload']
 
 
-  def close_session(self, session):
-    pass
+class HueQuery():
+  def __init__(self, user, cluster_crn):
+    self.user = user
+    self.cluster_crn = cluster_crn
+    self.api = AnalyticDbApi(self.user)
+
+  def do_post(self, url_path):
+    payload = '''{"method":"POST","url":"https://localhost:8888''' + url_path +'''","httpVersion":"HTTP/1.1","headers":[{"name":"Accept-Encoding","value":"gzip, deflate, br"},{"name":"Content-Type","value":"application/x-www-form-urlencoded; charset=UTF-8"},{"name":"Accept","value":"*/*"},{"name":"X-Requested-With","value":"XMLHttpRequest"},{"name":"Connection","value":"keep-alive"}],"queryString":[],"postData": {
+        "mimeType": "application/x-www-form-urlencoded; charset=UTF-8",
+        "text": "snippet=%7B%22type%22%3A%22impala%22%2C%22source%22%3A%22data%22%7D&cluster=%22default-romain%22",
+        "params": [
+          {
+            "name": "snippet",
+            "value": "%7B%22type%22%3A%22impala%22%2C%22source%22%3A%22data%22%7D"
+          },
+          {
+            "name": "cluster",
+            "value": "%22default-romain%22"
+          }
+        ]
+      }}''' 
+    
+    return self.api.submit_hue_query(self.cluster_crn, payload)
