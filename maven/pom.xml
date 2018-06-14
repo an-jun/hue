@@ -131,7 +131,30 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-  </repositories>
+    <repository>
+        <id>central</id>
+        <name>Nexus aliyun</name>
+        <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </repository>
 
+  </repositories>
+  <pluginRepositories>  
+          <pluginRepository>  
+              <id>central</id>  
+              <name>local private nexus</name>  
+              <url>http://maven.aliyun.com/nexus/content/groups/public</url>  
+              <releases>  
+                  <enabled>true</enabled>  
+              </releases>  
+              <snapshots>  
+                  <enabled>false</enabled>  
+              </snapshots>  
+          </pluginRepository>  
+          <pluginRepository>
+              <id>repo2</id>           
+              <name>Human Readable Name for this Mirror.</name>      
+              <url>http://repo2.maven.org/maven2/</url> 
+          </pluginRepository>
+      </pluginRepositories> 
 
 </project>

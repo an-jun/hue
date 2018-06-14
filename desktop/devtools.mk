@@ -30,14 +30,14 @@ DEVTOOLS += \
         isort[4.2.5] \
         six[1.10.0]
 
-PYPI_MIRROR ?= https://pypi.python.org/simple/
+PYPI_MIRROR ?= https://pypi.tuna.tsinghua.edu.cn/simple/
 
 # Install/download dev tools for SDK into the virtual environment
 .PHONY: $(DEVTOOLS)
 $(DEVTOOLS):
 	@echo "--- Installing development tool: $@"
 	$(ENV_EASY_INSTALL) -i $(PYPI_MIRROR) \
-	   -H *.cloudera.com,pypi.python.org,files.pythonhosted.org $(SETUPTOOLS_OPTS) $(subst ],,$(subst [,==,$@))
+	   -H pypi.tuna.tsinghua.edu.cn,*.cloudera.com,pypi.python.org,files.pythonhosted.org $(SETUPTOOLS_OPTS) $(subst ],,$(subst [,==,$@))
 
 $(BLD_DIR):
 	@mkdir -p $@
